@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yahtzee Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inconsolata:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:      #0a0a0b;
+    --surface: #111113;
+    --card:    #18181c;
+    --border:  #2c2c32;
+    --border2: #3a3a42;
+    --text:    #f2efe9;
+    --muted:   #6b6b78;
+    --muted2:  #3a3a42;
+    --accent:  #f0c040;
+    --green:   #4ade80;
+    --red:     #f87171;
+    --r: 4px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inconsolata', monospace;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+/* ══ SETUP ══ */
+#setup {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-height: 100vh;
+padding: 32px 16px;
+}
+.s-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 76px;
+color: var(–accent);
+letter-spacing: 4px;
+line-height: 1;
+margin-bottom: 2px;
+}
+.s-sub {
+font-size: 11px;
+letter-spacing: 0.2em;
+color: var(–muted);
+text-transform: uppercase;
+margin-bottom: 36px;
+}
+.s-card {
+background: var(–card);
+border: 1px solid var(–border);
+padding: 28px;
+width: 100%;
+max-width: 400px;
+}
+.s-lbl {
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–muted);
+margin-bottom: 10px;
+}
+.count-row {
+display: flex;
+gap: 6px;
+margin-bottom: 24px;
+}
+.cnt-btn {
+flex: 1;
+height: 42px;
+background: var(–surface);
+border: 1px solid var(–border);
+color: var(–muted);
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 22px;
+cursor: pointer;
+transition: all .13s;
+border-radius: var(–r);
+}
+.cnt-btn:hover { border-color: var(–border2); color: var(–text); }
+.cnt-btn.on { background: var(–accent); border-color: var(–accent); color: #000; }
+#name-fields { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+.nf-row { display: flex; align-items: center; gap: 10px; }
+.p-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.n-inp {
+flex: 1;
+height: 40px;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: var(–r);
+color: var(–text);
+font-family: ‘Inconsolata’, monospace;
+font-size: 15px;
+font-weight: 700;
+padding: 0 12px;
+outline: none;
+transition: border-color .13s;
+}
+.n-inp:focus { border-color: var(–accent); }
+.n-inp::placeholder { color: var(–muted2); font-weight: 400; }
+.btn-go {
+width: 100%;
+height: 50px;
+background: var(–accent);
+border: none;
+color: #000;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 20px;
+letter-spacing: 2px;
+cursor: pointer;
+border-radius: var(–r);
+transition: opacity .13s;
+}
+.btn-go:hover { opacity: .85; }
+.btn-go:disabled { opacity: .3; cursor: not-allowed; }
+
+/* ══ GAME ══ */
+#game { display: none; padding: 20px 12px 80px; max-width: 920px; margin: 0 auto; }
+.g-head { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.g-title { font-family: ‘Bebas Neue’, sans-serif; font-size: 48px; color: var(–accent); letter-spacing: 2px; line-height: 1; }
+.g-names { font-size: 11px; color: var(–muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.btn-new {
+margin-left: auto;
+background: none;
+border: 1px solid var(–border);
+color: var(–muted);
+font-family: ‘Inconsolata’, monospace;
+font-size: 11px;
+letter-spacing: 0.1em;
+text-transform: uppercase;
+padding: 6px 14px;
+cursor: pointer;
+border-radius: var(–r);
+transition: all .13s;
+}
+.btn-new:hover { border-color: var(–red); color: var(–red); }
+
+/* table */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 360px; }
+th, td { padding: 0; }
+
+.ph-row th {
+padding: 6px 6px 14px;
+text-align: center;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 20px;
+letter-spacing: 1px;
+}
+th.lc { width: 130px; min-width: 110px; text-align: left; }
+
+.sec-row td {
+background: var(–border);
+font-size: 10px;
+letter-spacing: 0.18em;
+text-transform: uppercase;
+color: var(–muted);
+padding: 5px 8px;
+font-weight: 700;
+}
+
+.sr td {
+height: 36px;
+border-bottom: 1px solid #1a1a1e;
+vertical-align: middle;
+}
+.sr:hover td { background: #141418; }
+.sr td.lc {
+color: var(–muted);
+font-size: 11px;
+text-transform: uppercase;
+letter-spacing: 0.05em;
+padding-right: 8px;
+}
+
+.s-inp {
+width: 100%;
+height: 36px;
+background: transparent;
+border: none;
+outline: none;
+color: var(–text);
+font-family: ‘Inconsolata’, monospace;
+font-size: 18px;
+font-weight: 700;
+text-align: center;
+cursor: pointer;
+-moz-appearance: textfield;
+}
+.s-inp::-webkit-outer-spin-button,
+.s-inp::-webkit-inner-spin-button { -webkit-appearance: none; }
+.s-inp:focus { background: #1e1e24; color: var(–accent); }
+.s-inp::placeholder { color: #28282f; font-size: 20px; }
+
+/* sub / bonus / total */
+.sub-row td, .bon-row td, .tot-row td { vertical-align: middle; text-align: center; }
+
+.sub-row td {
+border-top: 1px solid var(–border);
+border-bottom: 1px solid var(–border);
+height: 32px; font-size: 13px; color: var(–muted);
+}
+.sub-row td.lc { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; }
+.sub-row .v { color: var(–text); font-weight: 700; font-size: 15px; }
+
+.bon-row td {
+height: 28px; font-size: 11px; color: var(–muted);
+border-bottom: 1px solid #1a1a1e;
+}
+.bon-row td.lc { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
+.bon-row .v { font-size: 13px; font-weight: 600; }
+.bon-row .yes { color: var(–green) !important; }
+.bon-row .near { color: var(–accent) !important; }
+
+.tot-row td {
+border-top: 2px solid var(–border2);
+height: 54px;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 34px;
+letter-spacing: 1px;
+}
+.tot-row td.lc { font-size: 18px; color: var(–muted); }
+
+/* winner */
+#winner {
+display: none;
+margin-top: 32px;
+padding: 28px;
+border: 1px solid var(–border2);
+background: var(–card);
+text-align: center;
+animation: pop .3s ease;
+}
+@keyframes pop { from { opacity:0; transform:scale(.96) translateY(8px); } to { opacity:1; transform:none; } }
+#winner .wl { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: var(–muted); margin-bottom: 4px; }
+#winner .wn { font-family: ‘Bebas Neue’, sans-serif; font-size: 64px; letter-spacing: 2px; }
+#winner .ws { font-size: 12px; color: var(–muted); margin-top: 2px; }
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(–bg); }
+::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 2px; }
+</style>
+
+</head>
+<body>
+
+<!-- SETUP -->
+
+<div id="setup">
+  <div class="s-title">YAHTZEE</div>
+  <div class="s-sub">Score Tracker</div>
+  <div class="s-card">
+    <div class="s-lbl">Numero di giocatori</div>
+    <div class="count-row" id="countRow"></div>
+    <div class="s-lbl">Nomi</div>
+    <div id="name-fields"></div>
+    <button class="btn-go" id="btnGo" onclick="startGame()" disabled>Inizia partita →</button>
+  </div>
+</div>
+
+<!-- GAME -->
+
+<div id="game">
+  <div class="g-head">
+    <div>
+      <div class="g-title">YAHTZEE</div>
+      <div class="g-names" id="gNames"></div>
+    </div>
+    <button class="btn-new" onclick="newGame()">↺ Nuova partita</button>
+  </div>
+  <div class="tbl-wrap"><table id="tbl"></table></div>
+  <div id="winner">
+    <div class="wl">🎲 Vincitore</div>
+    <div class="wn" id="wName">—</div>
+    <div class="ws" id="wScore"></div>
+  </div>
+</div>
+
+<script>
+const PALETTE = ['#f0c040','#f87171','#4ade80','#60a5fa','#c084fc','#fb923c','#f472b6','#34d399'];
+
+const UPPER = [
+  {id:'aces',   label:'Asso  ×1',   max:5 },
+  {id:'twos',   label:'Due   ×2',   max:10},
+  {id:'threes', label:'Tre   ×3',   max:15},
+  {id:'fours',  label:'Quattro ×4', max:20},
+  {id:'fives',  label:'Cinque ×5',  max:25},
+  {id:'sixes',  label:'Sei   ×6',   max:30},
+];
+const LOWER = [
+  {id:'tris',    label:'3 di un tipo',  max:30},
+  {id:'poker',   label:'4 di un tipo',  max:30},
+  {id:'full',    label:'Full House',    max:25},
+  {id:'sm_str',  label:'Scala Piccola', max:30},
+  {id:'lg_str',  label:'Scala Grande',  max:40},
+  {id:'yahtzee', label:'Yahtzee!',      max:50},
+  {id:'chance',  label:'Chance',        max:30},
+];
+const ALL = [...UPPER, ...LOWER];
+
+let players = [];
+let scores  = {};
+let n = 4;
+
+// ── SETUP ──
+function buildSetup() {
+  const cr = document.getElementById('countRow');
+  cr.innerHTML = '';
+  for (let i = 2; i <= 8; i++) {
+    const b = document.createElement('button');
+    b.className = 'cnt-btn' + (i === n ? ' on' : '');
+    b.textContent = i;
+    b.onclick = () => { n = i; buildSetup(); };
+    cr.appendChild(b);
+  }
+  buildFields();
+}
+
+function buildFields() {
+  const nf = document.getElementById('name-fields');
+  const prev = Array.from(nf.querySelectorAll('.n-inp')).map(x => x.value);
+  nf.innerHTML = '';
+  for (let i = 0; i < n; i++) {
+    const row = document.createElement('div');
+    row.className = 'nf-row';
+    const dot = document.createElement('div');
+    dot.className = 'p-dot';
+    dot.style.background = PALETTE[i];
+    const inp = document.createElement('input');
+    inp.className = 'n-inp';
+    inp.type = 'text';
+    inp.maxLength = 12;
+    inp.placeholder = `Giocatore ${i+1}`;
+    inp.value = prev[i] || '';
+    inp.oninput = validateGo;
+    row.appendChild(dot);
+    row.appendChild(inp);
+    nf.appendChild(row);
+  }
+  validateGo();
+}
+
+function validateGo() {
+  const vals = Array.from(document.querySelectorAll('.n-inp')).map(x => x.value.trim());
+  document.getElementById('btnGo').disabled =
+    !vals.every(v => v.length > 0) || new Set(vals).size !== vals.length;
+}
+
+function startGame() {
+  players = Array.from(document.querySelectorAll('.n-inp')).map((inp, i) => ({
+    name: inp.value.trim(), color: PALETTE[i]
+  }));
+  scores = {};
+  players.forEach(p => { scores[p.name] = {}; ALL.forEach(c => scores[p.name][c.id] = null); });
+
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+  document.getElementById('gNames').textContent = players.map(p => p.name).join(' · ');
+  buildTable();
+  updateTotals();
+}
+
+function newGame() {
+  if (!confirm('Tornare alla schermata iniziale?')) return;
+  document.getElementById('setup').style.display = 'flex';
+  document.getElementById('game').style.display  = 'none';
+  document.getElementById('winner').style.display = 'none';
+  buildSetup();
+}
+
+// ── TABLE ──
+function buildTable() {
+  const t = document.getElementById('tbl');
+  t.innerHTML = '';
+
+  // header
+  const hr = document.createElement('tr');
+  hr.className = 'ph-row';
+  addTH(hr, '', 'lc');
+  players.forEach(p => {
+    const th = document.createElement('th');
+    th.textContent = p.name.toUpperCase();
+    th.style.color = p.color;
+    hr.appendChild(th);
+  });
+  t.appendChild(hr);
+
+  addSec(t, '◎ SEZIONE ALTA');
+  UPPER.forEach(c => addSR(t, c));
+  addSubRow(t);
+  addBonRow(t);
+  addSec(t, '◎ SEZIONE BASSA');
+  LOWER.forEach(c => addSR(t, c));
+  addTotRow(t);
+}
+
+function addTH(tr, txt, cls) {
+  const th = document.createElement('th');
+  th.textContent = txt;
+  if (cls) th.className = cls;
+  tr.appendChild(th);
+  return th;
+}
+
+function addSec(t, label) {
+  const tr = document.createElement('tr');
+  tr.className = 'sec-row';
+  const td = document.createElement('td');
+  td.colSpan = 1 + players.length;
+  td.textContent = label;
+  tr.appendChild(td);
+  t.appendChild(tr);
+}
+
+function addSR(t, cat) {
+  const tr = document.createElement('tr');
+  tr.className = 'sr';
+  const tl = document.createElement('td');
+  tl.className = 'lc';
+  tl.textContent = cat.label;
+  tr.appendChild(tl);
+  players.forEach(p => {
+    const td = document.createElement('td');
+    const inp = document.createElement('input');
+    inp.type = 'number';
+    inp.className = 's-inp';
+    inp.min = 0; inp.max = cat.max;
+    inp.placeholder = '—';
+    inp.id = `sc_${p.name}_${cat.id}`;
+    if (scores[p.name][cat.id] !== null) inp.value = scores[p.name][cat.id];
+    inp.addEventListener('change', () => {
+      let v = parseInt(inp.value);
+      if (isNaN(v) || v < 0) { v = null; inp.value = ''; }
+      else if (v > cat.max) { v = cat.max; inp.value = v; }
+      scores[p.name][cat.id] = v;
+      updateTotals();
+    });
+    td.appendChild(inp);
+    tr.appendChild(td);
+  });
+  t.appendChild(tr);
+}
+
+function addRow(t, cls, lblTxt, idPrefix) {
+  const tr = document.createElement('tr');
+  tr.className = cls;
+  const tl = document.createElement('td');
+  tl.className = 'lc';
+  tl.textContent = lblTxt;
+  tr.appendChild(tl);
+  players.forEach(p => {
+    const td = document.createElement('td');
+    td.className = 'v';
+    td.id = `${idPrefix}_${p.name}`;
+    td.textContent = '—';
+    tr.appendChild(td);
+  });
+  t.appendChild(tr);
+}
+
+function addSubRow(t) { addRow(t, 'sub-row', 'Subtotale', 'sub'); }
+function addBonRow(t) { addRow(t, 'bon-row', 'Bonus +35', 'bon'); }
+function addTotRow(t) { addRow(t, 'tot-row', 'TOTALE',    'tot'); }
+
+// ── CALC ──
+const uSum = p => UPPER.reduce((s,c) => s+(scores[p.name][c.id]||0),0);
+const lSum = p => LOWER.reduce((s,c) => s+(scores[p.name][c.id]||0),0);
+const bon  = p => uSum(p) >= 63 ? 35 : 0;
+const gTot = p => uSum(p) + bon(p) + lSum(p);
+
+function updateTotals() {
+  players.forEach(p => {
+    const us = uSum(p), b = bon(p), gt = gTot(p), missing = 63 - us;
+
+    const subEl = document.getElementById(`sub_${p.name}`);
+    if (subEl) subEl.textContent = us;
+
+    const bonEl = document.getElementById(`bon_${p.name}`);
+    if (bonEl) {
+      if (b > 0) { bonEl.textContent = '+35 ✓'; bonEl.className = 'v yes'; }
+      else        { bonEl.textContent = `mancano ${missing}`; bonEl.className = missing<=10 ? 'v near' : 'v'; }
+    }
+
+    const totEl = document.getElementById(`tot_${p.name}`);
+    if (totEl) { totEl.textContent = gt; totEl.style.color = p.color; }
+  });
+
+  const allDone = players.every(p => ALL.every(c => scores[p.name][c.id] !== null));
+  const wb = document.getElementById('winner');
+  if (allDone && players.length > 0) {
+    const best = players.reduce((a,b) => gTot(a)>gTot(b)?a:b);
+    const wn = document.getElementById('wName');
+    wn.textContent = best.name.toUpperCase();
+    wn.style.color = best.color;
+    document.getElementById('wScore').textContent = `${gTot(best)} punti`;
+    wb.style.display = 'block';
+  } else {
+    wb.style.display = 'none';
+  }
+}
+
+// init
+buildSetup();
+</script>
+
+</body>
+</html>
