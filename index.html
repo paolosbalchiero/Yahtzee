@@ -7,373 +7,320 @@
 <title>Yahtzee Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inconsolata:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  /* FORCE dark theme regardless of OS/browser */
-  html { color-scheme: dark; }
-
-- { box-sizing: border-box; margin: 0; padding: 0; }
-
+html { color-scheme: dark; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-background: #0c0c0e !important;
-color: #f0ede8 !important;
-font-family: ‘Inconsolata’, monospace;
-font-size: 14px;
-min-height: 100vh;
+  background: #0c0c0e !important;
+  color: #f0ede8 !important;
+  -webkit-text-fill-color: #f0ede8;
+  font-family: 'Inconsolata', monospace;
+  font-size: 14px;
+  min-height: 100vh;
 }
 
 /* ══ SETUP ══ */
-#setup {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-min-height: 100vh;
-padding: 32px 16px;
+#screen-setup {
+display: flex; flex-direction: column; align-items: center;
+justify-content: center; min-height: 100vh; padding: 32px 16px;
 }
-.s-title {
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 80px;
-color: #f0c040;
-letter-spacing: 4px;
-line-height: 1;
-margin-bottom: 4px;
-}
-.s-sub {
-font-size: 11px;
-letter-spacing: 0.2em;
-color: #5a5a66;
-text-transform: uppercase;
-margin-bottom: 36px;
-}
-.s-card {
-background: #18181c;
-border: 1px solid #2e2e36;
-padding: 28px;
-width: 100%;
-max-width: 400px;
-border-radius: 6px;
-}
-.s-lbl {
-font-size: 10px;
-letter-spacing: 0.18em;
-text-transform: uppercase;
-color: #5a5a66;
-margin-bottom: 10px;
-}
-.count-row { display: flex; gap: 6px; margin-bottom: 24px; }
+.logo { font-family:‘Bebas Neue’,sans-serif; font-size:86px; color:#f0c040; letter-spacing:5px; line-height:1; }
+.logo-sub { font-size:10px; letter-spacing:.22em; color:#4a4a56; text-transform:uppercase; margin-bottom:36px; }
+.setup-card { background:#18181c; border:1px solid #2a2a32; border-radius:6px; padding:28px; width:100%; max-width:420px; }
+.lbl { font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#5a5a66; margin-bottom:10px; display:block; }
+.count-row { display:flex; gap:6px; margin-bottom:24px; }
 .cnt-btn {
-flex: 1;
-height: 44px;
-background: #111114;
-border: 1px solid #2e2e36;
-color: #5a5a66;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 22px;
-cursor: pointer;
-transition: all .13s;
-border-radius: 4px;
+flex:1; height:44px; background:#111114; border:1px solid #2a2a32;
+color:#5a5a66; -webkit-text-fill-color:#5a5a66;
+font-family:‘Bebas Neue’,sans-serif; font-size:22px;
+cursor:pointer; border-radius:4px; transition:all .12s;
 }
-.cnt-btn:hover { border-color: #4a4a56; color: #f0ede8; }
-.cnt-btn.on { background: #f0c040; border-color: #f0c040; color: #000; }
-
-#name-fields { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
-.nf-row { display: flex; align-items: center; gap: 10px; }
-.p-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
+.cnt-btn:hover { border-color:#4a4a56; color:#f0ede8; -webkit-text-fill-color:#f0ede8; }
+.cnt-btn.on { background:#f0c040; border-color:#f0c040; color:#000 !important; -webkit-text-fill-color:#000 !important; }
+#name-fields { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+.nf-row { display:flex; align-items:center; gap:10px; }
+.p-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
 .n-inp {
-flex: 1;
-height: 42px;
-background: #111114 !important;
-border: 1px solid #2e2e36;
-border-radius: 4px;
-color: #f0ede8 !important;
-font-family: ‘Inconsolata’, monospace;
-font-size: 15px;
-font-weight: 700;
-padding: 0 12px;
-outline: none;
-transition: border-color .13s;
--webkit-text-fill-color: #f0ede8;
+flex:1; height:42px; background:#111114 !important; border:1px solid #2a2a32; border-radius:4px;
+color:#f0ede8 !important; -webkit-text-fill-color:#f0ede8 !important;
+font-family:‘Inconsolata’,monospace; font-size:15px; font-weight:700;
+padding:0 12px; outline:none; transition:border-color .12s;
 }
-.n-inp:focus { border-color: #f0c040; }
-.n-inp::placeholder { color: #3a3a44 !important; -webkit-text-fill-color: #3a3a44; font-weight: 400; }
-
+.n-inp:focus { border-color:#f0c040; }
+.n-inp::placeholder { color:#3a3a44 !important; -webkit-text-fill-color:#3a3a44 !important; font-weight:400; }
 .btn-go {
-width: 100%;
-height: 50px;
-background: #f0c040;
-border: none;
-color: #000;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 20px;
-letter-spacing: 2px;
-cursor: pointer;
-border-radius: 4px;
-transition: opacity .13s;
+width:100%; height:50px; background:#f0c040; border:none;
+color:#000 !important; -webkit-text-fill-color:#000 !important;
+font-family:‘Bebas Neue’,sans-serif; font-size:20px; letter-spacing:2px;
+cursor:pointer; border-radius:4px; transition:opacity .12s;
 }
-.btn-go:hover { opacity: .85; }
-.btn-go:disabled { opacity: .28; cursor: not-allowed; }
+.btn-go:hover { opacity:.85; }
+.btn-go:disabled { opacity:.28; cursor:not-allowed; }
 
 /* ══ GAME ══ */
-#game { display: none; padding: 20px 14px 80px; max-width: 960px; margin: 0 auto; }
-.g-head { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-.g-title { font-family: ‘Bebas Neue’, sans-serif; font-size: 48px; color: #f0c040; letter-spacing: 2px; line-height: 1; }
-.g-names { font-size: 11px; color: #5a5a66; letter-spacing: 0.1em; text-transform: uppercase; }
+#screen-game { display:none; padding:20px 14px 80px; max-width:960px; margin:0 auto; }
+.g-head {
+display:flex; align-items:center; gap:12px; margin-bottom:24px; flex-wrap:wrap;
+}
+.g-logo { font-family:‘Bebas Neue’,sans-serif; font-size:44px; color:#f0c040; letter-spacing:2px; line-height:1; }
 .btn-new {
-margin-left: auto;
-background: none;
-border: 1px solid #2e2e36;
-color: #5a5a66;
-font-family: ‘Inconsolata’, monospace;
-font-size: 11px;
-letter-spacing: 0.1em;
-text-transform: uppercase;
-padding: 7px 14px;
-cursor: pointer;
-border-radius: 4px;
-transition: all .13s;
+margin-left:auto; background:none; border:1px solid #2a2a32; color:#5a5a66;
+-webkit-text-fill-color:#5a5a66; font-family:‘Inconsolata’,monospace;
+font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+padding:6px 12px; cursor:pointer; border-radius:4px; transition:all .12s;
 }
-.btn-new:hover { border-color: #f87171; color: #f87171; }
+.btn-new:hover { border-color:#f87171; color:#f87171; -webkit-text-fill-color:#f87171; }
 
-/* TABLE */
-.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-table { width: 100%; border-collapse: collapse; min-width: 380px; }
-th, td { padding: 0; }
+/* ── Legend ── */
+.legend {
+display:flex; gap:16px; flex-wrap:wrap; margin-bottom:16px;
+font-size:10px; color:#5a5a66; letter-spacing:.05em; align-items:center;
+}
+.leg-item { display:flex; align-items:center; gap:5px; }
+.leg-box { width:16px; height:16px; border-radius:3px; flex-shrink:0; }
+.leg-free { background:#111114; border:1.5px solid #2a2a32; }
+.leg-filled { background:#1a2e10; border:1.5px solid #3a4a28; }
+.leg-toggle { background:#1a1e2e; border:1.5px solid #2a3460; }
+.leg-yahtzee { background:#2a1e10; border:1.5px solid #60340a; }
 
-/* Player headers */
+/* ══ TABLE ══ */
+.tbl-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+table { width:100%; border-collapse:collapse; min-width:360px; }
+th, td { padding:0; }
+
 .ph-row th {
-padding: 6px 4px 16px;
-text-align: center;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 22px;
-letter-spacing: 1px;
-color: #f0ede8;
+padding:6px 3px 14px; text-align:center;
+font-family:‘Bebas Neue’,sans-serif; font-size:20px; letter-spacing:1px;
 }
-th.lc { width: 130px; min-width: 110px; text-align: left; padding-right: 8px; }
+.ph-row th.lc {
+width:136px; min-width:120px; text-align:left; padding-right:6px;
+font-family:‘Inconsolata’,monospace; font-size:12px; letter-spacing:0;
+color:#4a4a56 !important; -webkit-text-fill-color:#4a4a56 !important;
+}
 
-/* Section divider */
 .sec-row td {
-background: #222228;
-font-size: 10px;
-letter-spacing: 0.2em;
-text-transform: uppercase;
-color: #5a5a66;
-padding: 6px 8px;
-font-weight: 700;
+background:#1e1e24; font-size:9px; letter-spacing:.2em; text-transform:uppercase;
+color:#5a5a66; padding:5px 6px; font-weight:700;
 }
 
-/* Score rows */
-.sr td {
-height: 42px;
-border-bottom: 1px solid #1c1c22;
-vertical-align: middle;
-}
-.sr:hover td { background: #161619; }
+.sr td { height:40px; border-bottom:1px solid #1a1a1e; vertical-align:middle; }
+.sr:hover td { background:#131316; }
+.sr td.lc { color:#6a6a78; font-size:11px; text-transform:uppercase; letter-spacing:.04em; padding-right:6px; }
 
-.sr td.lc {
-color: #6b6b78;
-font-size: 11px;
-text-transform: uppercase;
-letter-spacing: 0.05em;
-padding-right: 8px;
-}
+/* ── Cell types ── */
 
-/* Score input wrapper — gives the cell a visible background */
-.inp-wrap {
-position: relative;
-margin: 3px;
-border-radius: 4px;
-background: #111114;
-border: 1.5px solid #2e2e36;
-transition: border-color .13s, background .13s;
+/* 1. Free-input cell */
+.cell {
+margin:3px; border-radius:4px; height:34px;
+display:flex; align-items:center; justify-content:center;
+position:relative; transition:border-color .12s, background .12s;
 }
-
-/* Filled state */
-.inp-wrap.filled {
-background: #1e2218;
-border-color: #3a4a2a;
+.cell-free {
+background:#111114; border:1.5px solid #2a2a32;
+}
+.cell-free:focus-within {
+border-color:#f0c040; background:#1c1a0e;
+}
+.cell-free.filled {
+background:#1a2e10; border-color:#3a4a28;
+}
+.cell-free.filled::after {
+content:‘✓’; position:absolute; top:1px; right:3px;
+font-size:8px; color:#4ade80; line-height:1; font-family:sans-serif;
 }
 
-/* Focus state */
-.inp-wrap:focus-within {
-border-color: #f0c040;
-background: #1e1c10;
+/* number input inside cell */
+.cell-inp {
+display:block; width:100%; height:100%;
+background:transparent !important; border:none !important; outline:none !important;
+color:#f0ede8 !important; -webkit-text-fill-color:#f0ede8 !important;
+font-family:‘Inconsolata’,monospace; font-size:17px; font-weight:700;
+text-align:center; cursor:pointer; -moz-appearance:textfield; padding:0;
+}
+.cell-inp::-webkit-outer-spin-button,
+.cell-inp::-webkit-inner-spin-button { -webkit-appearance:none; }
+.cell-inp::placeholder { color:#2e2e38 !important; -webkit-text-fill-color:#2e2e38 !important; font-size:22px; }
+.cell-free.filled .cell-inp { color:#cce8b8 !important; -webkit-text-fill-color:#cce8b8 !important; }
+.cell-free:focus-within .cell-inp { color:#f0c040 !important; -webkit-text-fill-color:#f0c040 !important; }
+
+/* 2. Toggle cell (fixed score categories) */
+.cell-toggle {
+background:#111820; border:1.5px solid #1e2a44;
+cursor:pointer; user-select:none;
+font-family:‘Bebas Neue’,sans-serif; font-size:16px; letter-spacing:.5px;
+color:#2a3a5a !important; -webkit-text-fill-color:#2a3a5a !important;
+transition:all .12s;
+}
+.cell-toggle:hover { border-color:#3a4a7a; color:#4a6aaa !important; -webkit-text-fill-color:#4a6aaa !important; }
+.cell-toggle.on {
+background:#1a2e10; border-color:#4ade80;
+color:#4ade80 !important; -webkit-text-fill-color:#4ade80 !important;
+}
+.cell-toggle.on::after {
+content:‘✓’; position:absolute; top:1px; right:3px;
+font-size:8px; color:#4ade80; line-height:1; font-family:sans-serif;
 }
 
-.s-inp {
-display: block;
-width: 100%;
-height: 36px;
-background: transparent !important;
-border: none !important;
-outline: none !important;
-/* HARDCODED colors — not CSS vars — to fight browser overrides */
-color: #f0ede8 !important;
--webkit-text-fill-color: #f0ede8 !important;
-font-family: ‘Inconsolata’, monospace;
-font-size: 18px;
-font-weight: 700;
-text-align: center;
-cursor: pointer;
--moz-appearance: textfield;
-padding: 0;
+/* 3. Yahtzee cell — special */
+.cell-yahtzee {
+background:#1c1208; border:1.5px solid #3a2008;
+cursor:pointer; user-select:none;
+flex-direction:column; gap:1px;
+transition:all .12s;
 }
-.s-inp::-webkit-outer-spin-button,
-.s-inp::-webkit-inner-spin-button { -webkit-appearance: none; }
-
-/* Placeholder: dim dot when empty */
-.s-inp::placeholder {
-color: #3a3a44 !important;
--webkit-text-fill-color: #3a3a44 !important;
-font-size: 22px;
-line-height: 36px;
+.cell-yahtzee:hover { border-color:#604010; }
+.ytz-count {
+font-family:‘Bebas Neue’,sans-serif; font-size:20px; letter-spacing:.5px;
+color:#5a3a10 !important; -webkit-text-fill-color:#5a3a10 !important;
+line-height:1;
 }
-
-/* Filled: bright number */
-.inp-wrap.filled .s-inp {
-color: #e8e4dc !important;
--webkit-text-fill-color: #e8e4dc !important;
+.ytz-pts {
+font-size:9px; color:#5a3a10 !important; -webkit-text-fill-color:#5a3a10 !important;
+letter-spacing:.05em;
 }
-
-/* Focus: yellow */
-.inp-wrap:focus-within .s-inp {
-color: #f0c040 !important;
--webkit-text-fill-color: #f0c040 !important;
+.cell-yahtzee.has-one {
+background:#2a1e08; border-color:#c08020;
 }
-
-/* Checkmark badge for filled */
-.inp-wrap.filled::after {
-content: ‘✓’;
-position: absolute;
-top: 1px;
-right: 3px;
-font-size: 8px;
-color: #4ade80;
-line-height: 1;
-font-family: sans-serif;
+.cell-yahtzee.has-one .ytz-count { color:#f0c040 !important; -webkit-text-fill-color:#f0c040 !important; }
+.cell-yahtzee.has-one .ytz-pts   { color:#a07828 !important; -webkit-text-fill-color:#a07828 !important; }
+.cell-yahtzee.has-multi {
+background:#2a2208; border-color:#f0c040;
+box-shadow:0 0 0 1px #f0c04030;
 }
-
-/* Sub / bonus / total rows */
-.sub-row td, .bon-row td, .tot-row td {
-vertical-align: middle;
-text-align: center;
+.cell-yahtzee.has-multi .ytz-count { color:#f0c040 !important; -webkit-text-fill-color:#f0c040 !important; }
+.cell-yahtzee.has-multi .ytz-pts   { color:#c09830 !important; -webkit-text-fill-color:#c09830 !important; }
+/* undo button inside yahtzee cell */
+.ytz-undo {
+position:absolute; top:2px; right:3px; font-size:9px;
+color:#5a3a10; cursor:pointer; line-height:1; opacity:.6;
 }
+.ytz-undo:hover { opacity:1; }
 
+/* ── Stat rows ── */
+.sub-row td, .bon-row td, .tot-row td { vertical-align:middle; text-align:center; }
 .sub-row td {
-border-top: 1px solid #2e2e36;
-border-bottom: 1px solid #2e2e36;
-height: 34px;
-font-size: 13px;
-color: #6b6b78;
+height:32px; border-top:1px solid #2a2a32; border-bottom:1px solid #2a2a32;
+font-size:13px; color:#6a6a78;
 }
-.sub-row td.lc { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; }
-.sub-row .v { color: #f0ede8 !important; -webkit-text-fill-color: #f0ede8; font-weight: 700; font-size: 15px; }
+.sub-row td.lc { font-size:10px; text-transform:uppercase; letter-spacing:.09em; }
+.sub-row .v { font-weight:700; font-size:15px; color:#f0ede8 !important; -webkit-text-fill-color:#f0ede8 !important; }
 
-.bon-row td {
-height: 30px;
-font-size: 11px;
-color: #6b6b78;
-border-bottom: 1px solid #1c1c22;
-}
-.bon-row td.lc { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; }
-.bon-row .v { font-size: 13px; font-weight: 600; color: #6b6b78; }
-.bon-row .yes { color: #4ade80 !important; -webkit-text-fill-color: #4ade80; }
-.bon-row .near { color: #f0c040 !important; -webkit-text-fill-color: #f0c040; }
+.bon-row td { height:28px; border-bottom:1px solid #1a1a1e; font-size:11px; color:#6a6a78; }
+.bon-row td.lc { font-size:10px; text-transform:uppercase; letter-spacing:.08em; }
+.bon-row .v { font-size:13px; font-weight:600; color:#6a6a78 !important; -webkit-text-fill-color:#6a6a78 !important; }
+.bon-row .yes  { color:#4ade80 !important; -webkit-text-fill-color:#4ade80 !important; }
+.bon-row .near { color:#f0c040 !important; -webkit-text-fill-color:#f0c040 !important; }
 
-.tot-row td {
-border-top: 2px solid #2e2e36;
-height: 56px;
-font-family: ‘Bebas Neue’, sans-serif;
-font-size: 36px;
-letter-spacing: 1px;
-}
-.tot-row td.lc { font-size: 18px; color: #5a5a66; }
+.tot-row td { height:56px; border-top:2px solid #2a2a32; font-family:‘Bebas Neue’,sans-serif; font-size:36px; letter-spacing:1px; }
+.tot-row td.lc { font-size:16px; color:#5a5a66 !important; -webkit-text-fill-color:#5a5a66 !important; }
 
-/* Winner */
-#winner {
-display: none;
-margin-top: 32px;
-padding: 28px;
-border: 1px solid #3a3a44;
-background: #18181c;
-text-align: center;
-border-radius: 6px;
-animation: pop .3s ease;
+/* ── Winner ── */
+#winner-bar {
+display:none; margin-top:28px; padding:28px; border:1px solid #3a3a44;
+background:#18181c; border-radius:6px; text-align:center; animation:pop .35s ease;
 }
-@keyframes pop {
-from { opacity:0; transform:scale(.95) translateY(10px); }
-to   { opacity:1; transform:none; }
-}
-#winner .wl { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: #5a5a66; margin-bottom: 4px; }
-#winner .wn { font-family: ‘Bebas Neue’, sans-serif; font-size: 64px; letter-spacing: 2px; }
-#winner .ws { font-size: 13px; color: #5a5a66; margin-top: 4px; }
+@keyframes pop { from{opacity:0;transform:scale(.95) translateY(10px)} to{opacity:1;transform:none} }
+#winner-bar .wl { font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:#5a5a66; margin-bottom:4px; }
+#winner-bar .wn { font-family:‘Bebas Neue’,sans-serif; font-size:60px; letter-spacing:2px; }
+#winner-bar .ws { font-size:12px; color:#5a5a66; margin-top:4px; }
 
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: #0c0c0e; }
-::-webkit-scrollbar-thumb { background: #3a3a44; border-radius: 2px; }
+/* leaderboard inside winner */
+.lb { margin-top:16px; display:flex; flex-direction:column; gap:4px; }
+.lb-row {
+display:flex; align-items:center; justify-content:space-between;
+background:#111114; border:1px solid #2a2a32; border-radius:4px; padding:6px 12px;
+font-size:13px;
+}
+.lb-row.first { border-color:#f0c04044; background:#1e1c0a; }
+.lb-pos { font-family:‘Bebas Neue’,sans-serif; font-size:18px; color:#4a4a56; margin-right:8px; }
+.lb-name { flex:1; font-weight:700; }
+.lb-pts { font-family:‘Bebas Neue’,sans-serif; font-size:20px; }
+
+::-webkit-scrollbar { width:4px; height:4px; }
+::-webkit-scrollbar-track { background:#0c0c0e; }
+::-webkit-scrollbar-thumb { background:#3a3a44; border-radius:2px; }
 </style>
 
 </head>
 <body>
 
-<!-- SETUP -->
+<!-- ══ SETUP ══ -->
 
-<div id="setup">
-  <div class="s-title">YAHTZEE</div>
-  <div class="s-sub">Score Tracker</div>
-  <div class="s-card">
-    <div class="s-lbl">Numero di giocatori</div>
+<div id="screen-setup">
+  <div class="logo">YAHTZEE</div>
+  <div class="logo-sub">Score Tracker</div>
+  <div class="setup-card">
+    <span class="lbl">Numero di giocatori</span>
     <div class="count-row" id="countRow"></div>
-    <div class="s-lbl">Nomi</div>
+    <span class="lbl">Nomi</span>
     <div id="name-fields"></div>
     <button class="btn-go" id="btnGo" onclick="startGame()" disabled>Inizia partita →</button>
   </div>
 </div>
 
-<!-- GAME -->
+<!-- ══ GAME ══ -->
 
-<div id="game">
+<div id="screen-game">
   <div class="g-head">
-    <div>
-      <div class="g-title">YAHTZEE</div>
-      <div class="g-names" id="gNames"></div>
-    </div>
+    <div class="g-logo">YAHTZEE</div>
     <button class="btn-new" onclick="newGame()">↺ Nuova partita</button>
   </div>
+
+  <div class="legend">
+    <div class="leg-item"><div class="leg-box leg-free"></div> Inserimento libero</div>
+    <div class="leg-item"><div class="leg-box leg-toggle"></div> Tap per segnare (valore fisso)</div>
+    <div class="leg-item" style="background:#2a1e0866;padding:3px 6px;border-radius:3px;">🎲 Yahtzee: tap = +50 (primo) poi +100 ognuno</div>
+  </div>
+
   <div class="tbl-wrap"><table id="tbl"></table></div>
-  <div id="winner">
-    <div class="wl">🎲 Vincitore</div>
-    <div class="wn" id="wName">—</div>
-    <div class="ws" id="wScore"></div>
+
+  <div id="winner-bar">
+    <div class="wl">🎲 Partita finita</div>
+    <div class="wn" id="w-name">—</div>
+    <div class="ws" id="w-score"></div>
+    <div class="lb" id="leaderboard"></div>
   </div>
 </div>
 
 <script>
+/* ══════════════════════════════
+   DATI
+══════════════════════════════ */
 const PALETTE = ['#f0c040','#f87171','#4ade80','#60a5fa','#c084fc','#fb923c','#f472b6','#34d399'];
 
+// type: 'free' | 'toggle' | 'yahtzee'
+// fixed: valore quando toggled ON
 const UPPER = [
-  {id:'aces',   label:'Asso  ×1',    max:5 },
-  {id:'twos',   label:'Due   ×2',    max:10},
-  {id:'threes', label:'Tre   ×3',    max:15},
-  {id:'fours',  label:'Quattro ×4',  max:20},
-  {id:'fives',  label:'Cinque ×5',   max:25},
-  {id:'sixes',  label:'Sei   ×6',    max:30},
+  {id:'aces',   label:'Asso ×1',    type:'free', max:5 },
+  {id:'twos',   label:'Due ×2',     type:'free', max:10},
+  {id:'threes', label:'Tre ×3',     type:'free', max:15},
+  {id:'fours',  label:'Quattro ×4', type:'free', max:20},
+  {id:'fives',  label:'Cinque ×5',  type:'free', max:25},
+  {id:'sixes',  label:'Sei ×6',     type:'free', max:30},
 ];
 const LOWER = [
-  {id:'tris',    label:'3 di un tipo',  max:30},
-  {id:'poker',   label:'4 di un tipo',  max:30},
-  {id:'full',    label:'Full House',    max:25},
-  {id:'sm_str',  label:'Scala Piccola', max:30},
-  {id:'lg_str',  label:'Scala Grande',  max:40},
-  {id:'yahtzee', label:'Yahtzee!',      max:50},
-  {id:'chance',  label:'Chance',        max:30},
+  {id:'tris',    label:'3 di un tipo',  type:'free',   max:30},
+  {id:'poker',   label:'4 di un tipo',  type:'free',   max:30},
+  {id:'full',    label:'Full House',    type:'toggle', fixed:25},
+  {id:'sm_str',  label:'Scala Piccola', type:'toggle', fixed:30},
+  {id:'lg_str',  label:'Scala Grande',  type:'toggle', fixed:40},
+  {id:'yahtzee', label:'Yahtzee!',      type:'yahtzee'},
+  {id:'chance',  label:'Chance',        type:'free',   max:30},
 ];
 const ALL = [...UPPER, ...LOWER];
 
+/* ══════════════════════════════
+   STATE
+   scores[name][catId] = number | null   (null = non compilato)
+   yahtzeeCount[name] = number            (quante volte segnato)
+══════════════════════════════ */
 let players = [];
 let scores  = {};
+let yahtzeeCount = {};
 let n = 4;
 
-/* ── SETUP ── */
+/* ══════════════════════════════
+   SETUP
+══════════════════════════════ */
 function buildSetup() {
   const cr = document.getElementById('countRow');
   cr.innerHTML = '';
@@ -392,21 +339,14 @@ function buildFields() {
   const prev = Array.from(nf.querySelectorAll('.n-inp')).map(x => x.value);
   nf.innerHTML = '';
   for (let i = 0; i < n; i++) {
-    const row = document.createElement('div');
-    row.className = 'nf-row';
-    const dot = document.createElement('div');
-    dot.className = 'p-dot';
-    dot.style.background = PALETTE[i];
+    const row = document.createElement('div'); row.className = 'nf-row';
+    const dot = document.createElement('div'); dot.className = 'p-dot'; dot.style.background = PALETTE[i];
     const inp = document.createElement('input');
-    inp.className = 'n-inp';
-    inp.type = 'text';
-    inp.maxLength = 12;
+    inp.className = 'n-inp'; inp.type = 'text'; inp.maxLength = 12;
     inp.placeholder = `Giocatore ${i+1}`;
     inp.value = prev[i] || '';
     inp.oninput = validateGo;
-    row.appendChild(dot);
-    row.appendChild(inp);
-    nf.appendChild(row);
+    row.appendChild(dot); row.appendChild(inp); nf.appendChild(row);
   }
   validateGo();
 }
@@ -422,141 +362,242 @@ function startGame() {
     name: inp.value.trim(), color: PALETTE[i]
   }));
   scores = {};
-  players.forEach(p => { scores[p.name] = {}; ALL.forEach(c => scores[p.name][c.id] = null); });
+  yahtzeeCount = {};
+  players.forEach(p => {
+    scores[p.name] = {};
+    ALL.forEach(c => scores[p.name][c.id] = null);
+    yahtzeeCount[p.name] = 0;
+  });
 
-  document.getElementById('setup').style.display = 'none';
-  document.getElementById('game').style.display  = 'block';
-  document.getElementById('gNames').textContent   = players.map(p => p.name).join(' · ');
+  document.getElementById('screen-setup').style.display = 'none';
+  document.getElementById('screen-game').style.display  = 'block';
+  document.getElementById('winner-bar').style.display   = 'none';
   buildTable();
   updateTotals();
 }
 
 function newGame() {
   if (!confirm('Tornare alla schermata iniziale?')) return;
-  document.getElementById('setup').style.display  = 'flex';
-  document.getElementById('game').style.display   = 'none';
-  document.getElementById('winner').style.display = 'none';
+  players = []; scores = {}; yahtzeeCount = {};
+  document.getElementById('screen-setup').style.display = 'flex';
+  document.getElementById('screen-game').style.display  = 'none';
+  document.getElementById('winner-bar').style.display   = 'none';
+  document.getElementById('tbl').innerHTML = '';
   buildSetup();
 }
 
-/* ── TABLE ── */
+/* ══════════════════════════════
+   TABLE BUILD
+══════════════════════════════ */
 function buildTable() {
   const t = document.getElementById('tbl');
   t.innerHTML = '';
 
-  // Player header
-  const hr = document.createElement('tr');
-  hr.className = 'ph-row';
-  const th0 = document.createElement('th');
-  th0.className = 'lc';
+  // header
+  const hr = document.createElement('tr'); hr.className = 'ph-row';
+  const th0 = document.createElement('th'); th0.className = 'lc'; th0.textContent = 'Categoria';
   hr.appendChild(th0);
   players.forEach(p => {
     const th = document.createElement('th');
     th.textContent = p.name.toUpperCase();
     th.style.color = p.color;
+    th.style.webkitTextFillColor = p.color;
     hr.appendChild(th);
   });
   t.appendChild(hr);
 
   addSec(t, '◎ SEZIONE ALTA');
-  UPPER.forEach(c => addSR(t, c));
+  UPPER.forEach(c => addCatRow(t, c));
   addSubRow(t);
   addBonRow(t);
   addSec(t, '◎ SEZIONE BASSA');
-  LOWER.forEach(c => addSR(t, c));
+  LOWER.forEach(c => addCatRow(t, c));
   addTotRow(t);
 }
 
 function addSec(t, label) {
-  const tr = document.createElement('tr');
-  tr.className = 'sec-row';
-  const td = document.createElement('td');
-  td.colSpan = 1 + players.length;
-  td.textContent = label;
-  tr.appendChild(td);
-  t.appendChild(tr);
+  const tr = document.createElement('tr'); tr.className = 'sec-row';
+  const td = document.createElement('td'); td.colSpan = 1 + players.length; td.textContent = label;
+  tr.appendChild(td); t.appendChild(tr);
 }
 
-function addSR(t, cat) {
-  const tr = document.createElement('tr');
-  tr.className = 'sr';
-
-  const tl = document.createElement('td');
-  tl.className = 'lc';
-  tl.textContent = cat.label;
+function addCatRow(t, cat) {
+  const tr = document.createElement('tr'); tr.className = 'sr';
+  const tl = document.createElement('td'); tl.className = 'lc'; tl.textContent = cat.label;
   tr.appendChild(tl);
 
   players.forEach(p => {
     const td = document.createElement('td');
+    td.appendChild(makeCell(cat, p));
+    tr.appendChild(td);
+  });
+  t.appendChild(tr);
+}
 
-    // wrapper gives visible background + border
-    const wrap = document.createElement('div');
-    wrap.className = 'inp-wrap';
-    wrap.id = `wrap_${p.name}_${cat.id}`;
+/* ══════════════════════════════
+   CELL FACTORIES
+══════════════════════════════ */
+function makeCell(cat, p) {
+  if (cat.type === 'free')     return makeFreeCell(cat, p);
+  if (cat.type === 'toggle')   return makeToggleCell(cat, p);
+  if (cat.type === 'yahtzee')  return makeYahtzeeCell(p);
+}
 
-    const inp = document.createElement('input');
-    inp.type = 'number';
-    inp.className = 's-inp';
-    inp.min = 0;
-    inp.max = cat.max;
-    inp.placeholder = '·';
-    inp.id = `sc_${p.name}_${cat.id}`;
-    inp.autocomplete = 'off';
+/* — Free input — */
+function makeFreeCell(cat, p) {
+  const div = document.createElement('div');
+  div.className = 'cell cell-free';
+  div.id = `cell_${p.name}_${cat.id}`;
 
-    if (scores[p.name][cat.id] !== null) {
-      inp.value = scores[p.name][cat.id];
-      wrap.classList.add('filled');
+  const val = scores[p.name][cat.id];
+  if (val !== null) div.classList.add('filled');
+
+  const inp = document.createElement('input');
+  inp.type = 'number'; inp.className = 'cell-inp';
+  inp.min = 0; inp.max = cat.max; inp.autocomplete = 'off';
+  inp.placeholder = '·';
+  if (val !== null) inp.value = val;
+
+  inp.addEventListener('change', () => {
+    let v = parseInt(inp.value);
+    if (isNaN(v) || inp.value === '') { v = null; inp.value = ''; div.classList.remove('filled'); }
+    else {
+      if (v < 0) v = 0;
+      if (v > cat.max) v = cat.max;
+      inp.value = v;
+      div.classList.add('filled');
     }
-
-    inp.addEventListener('change', () => {
-      let v = parseInt(inp.value);
-      if (isNaN(v) || inp.value === '') { v = null; inp.value = ''; wrap.classList.remove('filled'); }
-      else {
-        if (v < 0) v = 0;
-        if (v > cat.max) v = cat.max;
-        inp.value = v;
-        wrap.classList.add('filled');
-      }
-      scores[p.name][cat.id] = v;
-      updateTotals();
-    });
-
-    // Also handle blur to catch manual clears
-    inp.addEventListener('input', () => {
-      if (inp.value === '') wrap.classList.remove('filled');
-    });
-
-    wrap.appendChild(inp);
-    td.appendChild(wrap);
-    tr.appendChild(td);
+    scores[p.name][cat.id] = v;
+    updateTotals();
+    checkAllDone();
   });
-  t.appendChild(tr);
+  inp.addEventListener('input', () => {
+    if (inp.value === '') div.classList.remove('filled');
+  });
+
+  div.appendChild(inp);
+  return div;
 }
 
-function addRow(t, cls, lblTxt, idPrefix) {
-  const tr = document.createElement('tr');
-  tr.className = cls;
-  const tl = document.createElement('td');
-  tl.className = 'lc';
-  tl.textContent = lblTxt;
+/* — Toggle (fixed score) — */
+function makeToggleCell(cat, p) {
+  const div = document.createElement('div');
+  div.className = 'cell cell-toggle';
+  div.id = `cell_${p.name}_${cat.id}`;
+
+  const on = scores[p.name][cat.id] !== null;
+  if (on) div.classList.add('on');
+  div.textContent = on ? cat.fixed : cat.fixed;
+
+  div.onclick = () => {
+    const isOn = div.classList.contains('on');
+    if (isOn) {
+      // undo
+      scores[p.name][cat.id] = null;
+      div.classList.remove('on');
+    } else {
+      scores[p.name][cat.id] = cat.fixed;
+      div.classList.add('on');
+    }
+    updateTotals();
+    checkAllDone();
+  };
+  return div;
+}
+
+/* — Yahtzee (multi) — */
+function makeYahtzeeCell(p) {
+  const div = document.createElement('div');
+  div.className = 'cell cell-yahtzee';
+  div.id = `cell_${p.name}_yahtzee`;
+  renderYahtzeeCell(div, p);
+  return div;
+}
+
+function renderYahtzeeCell(div, p) {
+  div.innerHTML = '';
+  const cnt = yahtzeeCount[p.name];
+
+  // state classes
+  div.classList.remove('has-one','has-multi');
+  if (cnt === 1) div.classList.add('has-one');
+  else if (cnt > 1) div.classList.add('has-multi');
+
+  // score label
+  const ytzScore = yahtzeeScore(p);
+  const countEl = document.createElement('div');
+  countEl.className = 'ytz-count';
+  countEl.textContent = ytzScore;
+
+  // subtitle
+  const ptsEl = document.createElement('div');
+  ptsEl.className = 'ytz-pts';
+  if (cnt === 0) ptsEl.textContent = 'tap per segnare';
+  else if (cnt === 1) ptsEl.textContent = '× 1 — tap per aggiungere';
+  else ptsEl.textContent = `× ${cnt} Yahtzee!`;
+
+  div.appendChild(countEl);
+  div.appendChild(ptsEl);
+
+  // undo button
+  if (cnt > 0) {
+    const undo = document.createElement('span');
+    undo.className = 'ytz-undo';
+    undo.textContent = '↩';
+    undo.title = 'Annulla ultimo Yahtzee';
+    undo.onclick = (e) => {
+      e.stopPropagation();
+      yahtzeeCount[p.name] = Math.max(0, cnt - 1);
+      scores[p.name]['yahtzee'] = yahtzeeScore(p);
+      if (yahtzeeCount[p.name] === 0) scores[p.name]['yahtzee'] = null;
+      renderYahtzeeCell(div, p);
+      updateTotals();
+      checkAllDone();
+    };
+    div.appendChild(undo);
+  }
+
+  // main click = add yahtzee
+  div.onclick = (e) => {
+    if (e.target.classList.contains('ytz-undo')) return;
+    yahtzeeCount[p.name] = cnt + 1;
+    scores[p.name]['yahtzee'] = yahtzeeScore(p);
+    renderYahtzeeCell(div, p);
+    updateTotals();
+    checkAllDone();
+  };
+}
+
+function yahtzeeScore(p) {
+  const cnt = yahtzeeCount[p.name];
+  if (cnt === 0) return null;
+  // first = 50, each additional = +100
+  return 50 + (cnt - 1) * 100;
+}
+
+/* ══════════════════════════════
+   STAT ROWS
+══════════════════════════════ */
+function addStatRow(t, cls, label, idPfx) {
+  const tr = document.createElement('tr'); tr.className = cls;
+  const tl = document.createElement('td'); tl.className = 'lc'; tl.textContent = label;
   tr.appendChild(tl);
   players.forEach(p => {
     const td = document.createElement('td');
-    td.className = 'v';
-    td.id = `${idPrefix}_${p.name}`;
-    td.textContent = '—';
+    td.className = 'v'; td.id = `${idPfx}_${p.name}`; td.textContent = '0';
     tr.appendChild(td);
   });
   t.appendChild(tr);
 }
+function addSubRow(t) { addStatRow(t, 'sub-row', 'Subtotale', 'sub'); }
+function addBonRow(t) { addStatRow(t, 'bon-row', 'Bonus +35', 'bon'); }
+function addTotRow(t) { addStatRow(t, 'tot-row', 'TOTALE',    'tot'); }
 
-function addSubRow(t) { addRow(t, 'sub-row', 'Subtotale', 'sub'); }
-function addBonRow(t) { addRow(t, 'bon-row', 'Bonus +35', 'bon'); }
-function addTotRow(t) { addRow(t, 'tot-row', 'TOTALE',    'tot'); }
-
-/* ── CALC ── */
-const uSum = p => UPPER.reduce((s,c) => s + (scores[p.name][c.id] || 0), 0);
-const lSum = p => LOWER.reduce((s,c) => s + (scores[p.name][c.id] || 0), 0);
+/* ══════════════════════════════
+   TOTALS
+══════════════════════════════ */
+const uSum = p => UPPER.reduce((s, c) => s + (scores[p.name][c.id] || 0), 0);
+const lSum = p => LOWER.reduce((s, c) => s + (scores[p.name][c.id] || 0), 0);
 const bon  = p => uSum(p) >= 63 ? 35 : 0;
 const gTot = p => uSum(p) + bon(p) + lSum(p);
 
@@ -574,29 +615,56 @@ function updateTotals() {
     }
 
     const totEl = document.getElementById(`tot_${p.name}`);
-    if (totEl) {
-      totEl.textContent = gt;
-      totEl.style.color = p.color;
-      totEl.style.webkitTextFillColor = p.color;
-    }
+    if (totEl) { totEl.textContent = gt; totEl.style.color = p.color; totEl.style.webkitTextFillColor = p.color; }
   });
-
-  const allDone = players.every(p => ALL.every(c => scores[p.name][c.id] !== null));
-  const wb = document.getElementById('winner');
-  if (allDone && players.length > 0) {
-    const best = players.reduce((a, b) => gTot(a) > gTot(b) ? a : b);
-    const wn = document.getElementById('wName');
-    wn.textContent = best.name.toUpperCase();
-    wn.style.color = best.color;
-    wn.style.webkitTextFillColor = best.color;
-    document.getElementById('wScore').textContent = `${gTot(best)} punti`;
-    wb.style.display = 'block';
-    wb.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  } else {
-    wb.style.display = 'none';
-  }
 }
 
+/* ══════════════════════════════
+   END GAME CHECK
+══════════════════════════════ */
+function checkAllDone() {
+  // "done" = all free/toggle cells filled AND yahtzee tapped at least once
+  // (yahtzee can be 0 if they never got it — we consider it done when all others are filled
+  //  and user either scored yahtzee or explicitly chose to skip it)
+  // For tracker purposes: show winner when all non-yahtzee cells are filled.
+  const nonYhtz = ALL.filter(c => c.id !== 'yahtzee');
+  const allFilled = players.every(p => nonYhtz.every(c => scores[p.name][c.id] !== null));
+  if (!allFilled) return;
+
+  showWinner();
+}
+
+function showWinner() {
+  const sorted = [...players].sort((a, b) => gTot(b) - gTot(a));
+  const best = sorted[0];
+
+  const wn = document.getElementById('w-name');
+  wn.textContent = best.name.toUpperCase();
+  wn.style.color = best.color;
+  wn.style.webkitTextFillColor = best.color;
+  document.getElementById('w-score').textContent = `${gTot(best)} punti`;
+
+  const lb = document.getElementById('leaderboard');
+  lb.innerHTML = '';
+  sorted.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'lb-row' + (i === 0 ? ' first' : '');
+    row.innerHTML = `
+      <span class="lb-pos">${i+1}</span>
+      <span class="lb-name" style="color:${p.color};-webkit-text-fill-color:${p.color}">${p.name}</span>
+      <span class="lb-pts" style="color:${p.color};-webkit-text-fill-color:${p.color}">${gTot(p)}</span>
+    `;
+    lb.appendChild(row);
+  });
+
+  const wb = document.getElementById('winner-bar');
+  wb.style.display = 'block';
+  wb.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+/* ══════════════════════════════
+   INIT
+══════════════════════════════ */
 buildSetup();
 </script>
 
